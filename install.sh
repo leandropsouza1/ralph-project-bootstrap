@@ -2,11 +2,30 @@
 
 set -euo pipefail
 
+# ==========================================
+# Dependency check
+# ==========================================
+
+if ! command -v git >/dev/null 2>&1; then
+  echo "Error: git is required but not installed."
+  exit 1
+fi
+
 RALPH_REPO="https://github.com/snarktank/ralph.git"
 CLAUDE_CODE_REPO="https://github.com/anthropics/claude-code.git"
 
 RALPH_TEMP="$(mktemp -d)"
 CLAUDE_TEMP="$(mktemp -d)"
+
+# ==========================================
+# Cleanup handler
+# ==========================================
+
+cleanup() {
+  rm -rf "$RALPH_TEMP" "$CLAUDE_TEMP"
+}
+trap cleanup EXIT
+
 
 # ==========================================
 # START: Ralph installation
